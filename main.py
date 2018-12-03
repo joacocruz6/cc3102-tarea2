@@ -17,7 +17,8 @@ tokens=[
     "LOWER",
     "GREATER",
     "LOWEREQ",
-    "GREATEREQ"
+    "GREATEREQ",
+    "NEXTINST"
 ]
 #Simbolos de las operaciones:
 t_PLUS=r'\+'
@@ -27,10 +28,14 @@ t_DIVIDE=r'\/'
 t_EQUALS=r'\=\='#comparador de igualdad
 t_LOWEREQ=r'\<\='
 t_GREATEREQ=r'\>\='
+t_NEXTINST=r'\;'
 
 t_ASIGN=r'\=' #asignacion de variables
 t_LOWER=r'\<'
 t_GREATER=r'\>'
+#reconocer saltos de linea e ignorarlos
+t_ignore_newline=r'\n+'
+t_ignore=r' \t'
 #definicion de los enteros
 def t_INT(t):
     r'\d+'
@@ -41,14 +46,15 @@ def t_NAME(t):
     r'[a-z][a-z0-9]*'
     t.type='NAME'
     return t
+#ciertos errores
 def t_error(t):
-    print("Illegal Characters in the program!")
+    print("Illegal Characters '%s'" % t.value[0])
     t.lexer.skip(1)
 
 #Un pequeño ejemplo
 def main():
     lexer=lex.lex()
-    lexer.input("1<=2")
+    lexer.input("1+2 \n 2+4")
     while True:
         tok=lexer.token()
         if not tok:
