@@ -176,6 +176,8 @@ def p_input(p):
     p[0]=('read',p[1])
 #expresiones
 #todo, las expresiones, que pueden ser booleanos o normales. Los booleanos pueden ser comparativos o true o false. Los otros como calc.
+
+
 #Un pequeño ejemplo
 def main():
     lexer=lex.lex()
