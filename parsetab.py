@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DIVIDE DO ELSE EQUALS GREATER GREATEREQ IF INT LEFTBRACKET LOWER LOWEREQ MINUS MULTIPLY NAME NEXTINST NOTEQ PLUS PRINT READ RIGHTBRACKET THEN WHILE WLEFTBRACKET WRIGHTBRACKET\n    empty :\n    \n    program : program program\n    \n    program : conditional\n            | loop\n            | variables NEXTINST\n            | input NEXTINST\n            | show NEXTINST\n    \n    variables : NAME ASSIGN  expression\n    \n    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET\n    \n    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET\n    \n    loop : WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET\n    \n    show : PRINT LEFTBRACKET expression RIGHTBRACKET\n    \n    input :  NAME EQUALS READ LEFTBRACKET RIGHTBRACKET\n    \n    expression : INT\n    \n    expression : expression PLUS expression\n               | expression MINUS expression\n               | expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression EQUALS expression\n               | expression LOWER expression\n               | expression GREATER expression\n               | expression NOTEQ expression\n               | expression LOWEREQ expression\n               | expression GREATEREQ expression\n    \n    expression : LEFTBRACKET expression RIGHTBRACKET\n    \n    expression : MINUS expression\n    \n    expression : NAME\n    '
+_lr_signature = 'programleftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DIVIDE DO ELSE EQUALS GREATER GREATEREQ IF INT LEFTBRACKET LOWER LOWEREQ MINUS MULTIPLY NAME NEXTINST NOTEQ PLUS PRINT READ RIGHTBRACKET THEN WHILE WLEFTBRACKET WRIGHTBRACKET\n    empty :\n    \n    program : program program\n    \n    program : conditional\n            | loop\n            | expression NEXTINST\n            | variables NEXTINST\n            | input NEXTINST\n            | show NEXTINST\n    \n    variables : NAME ASSIGN  expression\n    \n    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET\n    \n    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET\n    \n    loop : WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET\n    \n    show : PRINT LEFTBRACKET expression RIGHTBRACKET\n    \n    input : NAME EQUALS READ LEFTBRACKET RIGHTBRACKET\n    \n    expression : INT\n    \n    expression : expression PLUS expression\n               | expression MINUS expression\n               | expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression EQUALS expression\n               | expression LOWER expression\n               | expression GREATER expression\n               | expression NOTEQ expression\n               | expression LOWEREQ expression\n               | expression GREATEREQ expression\n    \n    expression : LEFTBRACKET expression RIGHTBRACKET\n    \n    expression : MINUS expression\n    \n    expression : NAME\n    '
     
-_lr_action_items = {'$end':([0,1,],[-1,0,]),}
+_lr_action_items = {'IF':([0,1,2,3,15,16,27,28,29,61,62,63,64,65,66,68,69,70,],[8,8,-3,-4,8,-5,-6,-7,-8,8,8,8,8,-10,-12,8,8,-11,]),'WHILE':([0,1,2,3,15,16,27,28,29,61,62,63,64,65,66,68,69,70,],[10,10,-3,-4,10,-5,-6,-7,-8,10,10,10,10,-10,-12,10,10,-11,]),'INT':([0,1,2,3,9,12,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,33,35,37,61,62,63,64,65,66,68,69,70,],[11,11,-3,-4,11,11,11,-5,11,11,11,11,11,11,11,11,11,11,-6,-7,-8,11,11,11,11,11,11,11,11,-10,-12,11,11,-11,]),'LEFTBRACKET':([0,1,2,3,8,9,10,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,33,35,37,52,61,62,63,64,65,66,68,69,70,],[9,9,-3,-4,30,9,33,9,37,9,-5,9,9,9,9,9,9,9,9,9,9,-6,-7,-8,9,9,9,9,56,9,9,9,9,-10,-12,9,9,-11,]),'MINUS':([0,1,2,3,4,9,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,61,62,63,64,65,66,68,69,70,],[12,12,-3,-4,18,12,-15,12,-28,12,-5,12,12,12,12,12,12,12,12,12,12,-6,-7,-8,12,18,-28,12,-27,12,12,-16,-17,-18,-19,18,18,18,18,18,18,18,-26,18,18,18,12,12,12,12,-10,-12,12,12,-11,]),'NAME':([0,1,2,3,9,12,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,33,35,37,61,62,63,64,65,66,68,69,70,],[13,13,-3,-4,32,32,13,-5,32,32,32,32,32,32,32,32,32,32,-6,-7,-8,32,32,32,32,13,13,13,13,-10,-12,13,13,-11,]),'PRINT':([0,1,2,3,15,16,27,28,29,61,62,63,64,65,66,68,69,70,],[14,14,-3,-4,14,-5,-6,-7,-8,14,14,14,14,-10,-12,14,14,-11,]),'$end':([1,2,3,15,16,27,28,29,65,66,70,],[0,-3,-4,-2,-5,-6,-7,-8,-10,-12,-11,]),'WRIGHTBRACKET':([2,3,15,16,27,28,29,63,64,65,66,69,70,],[-3,-4,-2,-5,-6,-7,-8,65,66,-10,-12,70,-11,]),'NEXTINST':([4,5,6,7,11,13,32,34,38,39,40,41,42,43,44,45,46,47,49,51,57,60,],[16,27,28,29,-15,-28,-28,-27,-16,-17,-18,-19,-20,-21,-22,-23,-24,-25,-26,-9,-13,-14,]),'PLUS':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[17,-15,-28,17,-28,-27,-16,-17,-18,-19,17,17,17,17,17,17,17,-26,17,17,17,]),'MULTIPLY':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[19,-15,-28,19,-28,19,19,19,-18,-19,19,19,19,19,19,19,19,-26,19,19,19,]),'DIVIDE':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[20,-15,-28,20,-28,20,20,20,-18,-19,20,20,20,20,20,20,20,-26,20,20,20,]),'EQUALS':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[21,-15,36,21,-28,-27,-16,-17,-18,-19,21,21,21,21,21,21,21,-26,21,21,21,]),'LOWER':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[22,-15,-28,22,-28,-27,-16,-17,-18,-19,22,22,22,22,22,22,22,-26,22,22,22,]),'GREATER':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[23,-15,-28,23,-28,-27,-16,-17,-18,-19,23,23,23,23,23,23,23,-26,23,23,23,]),'NOTEQ':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[24,-15,-28,24,-28,-27,-16,-17,-18,-19,24,24,24,24,24,24,24,-26,24,24,24,]),'LOWEREQ':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[25,-15,-28,25,-28,-27,-16,-17,-18,-19,25,25,25,25,25,25,25,-26,25,25,25,]),'GREATEREQ':([4,11,13,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,53,],[26,-15,-28,26,-28,-27,-16,-17,-18,-19,26,26,26,26,26,26,26,-26,26,26,26,]),'RIGHTBRACKET':([11,31,32,34,38,39,40,41,42,43,44,45,46,47,48,49,50,53,56,],[-15,49,-28,-27,-16,-17,-18,-19,-20,-21,-22,-23,-24,-25,54,-26,55,57,60,]),'ASSIGN':([13,],[35,]),'READ':([36,],[52,]),'THEN':([54,],[58,]),'DO':([55,],[59,]),'WLEFTBRACKET':([58,59,67,],[61,62,68,]),'ELSE':([65,],[67,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'empty':([0,],[1,]),}
+_lr_goto_items = {'program':([0,1,15,61,62,63,64,68,69,],[1,15,15,63,64,15,15,69,15,]),'conditional':([0,1,15,61,62,63,64,68,69,],[2,2,2,2,2,2,2,2,2,]),'loop':([0,1,15,61,62,63,64,68,69,],[3,3,3,3,3,3,3,3,3,]),'expression':([0,1,9,12,15,17,18,19,20,21,22,23,24,25,26,30,33,35,37,61,62,63,64,68,69,],[4,4,31,34,4,38,39,40,41,42,43,44,45,46,47,48,50,51,53,4,4,4,4,4,4,]),'variables':([0,1,15,61,62,63,64,68,69,],[5,5,5,5,5,5,5,5,5,]),'input':([0,1,15,61,62,63,64,68,69,],[6,6,6,6,6,6,6,6,6,]),'show':([0,1,15,61,62,63,64,68,69,],[7,7,7,7,7,7,7,7,7,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,32 +26,33 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> empty","S'",1,None,None,None),
-  ('empty -> <empty>','empty',0,'p_empty','main.py',114),
-  ('program -> program program','program',2,'p_program_finite','main.py',120),
-  ('program -> conditional','program',1,'p_program_infinite','main.py',127),
-  ('program -> loop','program',1,'p_program_infinite','main.py',128),
-  ('program -> variables NEXTINST','program',2,'p_program_infinite','main.py',129),
-  ('program -> input NEXTINST','program',2,'p_program_infinite','main.py',130),
-  ('program -> show NEXTINST','program',2,'p_program_infinite','main.py',131),
-  ('variables -> NAME ASSIGN expression','variables',3,'p_variables','main.py',137),
-  ('conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET','conditional',8,'p_conditional','main.py',144),
-  ('conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET','conditional',12,'p_conditional_else','main.py',149),
-  ('loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET','loop',8,'p_loop','main.py',154),
-  ('show -> PRINT LEFTBRACKET expression RIGHTBRACKET','show',4,'p_show','main.py',160),
-  ('input -> NAME EQUALS READ LEFTBRACKET RIGHTBRACKET','input',5,'p_input','main.py',165),
-  ('expression -> INT','expression',1,'p_expression_number','main.py',172),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_arithmetic','main.py',177),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_arithmetic','main.py',178),
-  ('expression -> expression MULTIPLY expression','expression',3,'p_expression_arithmetic','main.py',179),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_arithmetic','main.py',180),
-  ('expression -> expression EQUALS expression','expression',3,'p_expression_arithmetic','main.py',181),
-  ('expression -> expression LOWER expression','expression',3,'p_expression_arithmetic','main.py',182),
-  ('expression -> expression GREATER expression','expression',3,'p_expression_arithmetic','main.py',183),
-  ('expression -> expression NOTEQ expression','expression',3,'p_expression_arithmetic','main.py',184),
-  ('expression -> expression LOWEREQ expression','expression',3,'p_expression_arithmetic','main.py',185),
-  ('expression -> expression GREATEREQ expression','expression',3,'p_expression_arithmetic','main.py',186),
-  ('expression -> LEFTBRACKET expression RIGHTBRACKET','expression',3,'p_expression_parenthesis','main.py',192),
-  ('expression -> MINUS expression','expression',2,'p_expression_minus','main.py',197),
-  ('expression -> NAME','expression',1,'p_expression_var','main.py',202),
+  ("S' -> program","S'",1,None,None,None),
+  ('empty -> <empty>','empty',0,'p_empty','program.py',115),
+  ('program -> program program','program',2,'p_program_finite','program.py',121),
+  ('program -> conditional','program',1,'p_program_infinite','program.py',127),
+  ('program -> loop','program',1,'p_program_infinite','program.py',128),
+  ('program -> expression NEXTINST','program',2,'p_program_infinite','program.py',129),
+  ('program -> variables NEXTINST','program',2,'p_program_infinite','program.py',130),
+  ('program -> input NEXTINST','program',2,'p_program_infinite','program.py',131),
+  ('program -> show NEXTINST','program',2,'p_program_infinite','program.py',132),
+  ('variables -> NAME ASSIGN expression','variables',3,'p_variables','program.py',139),
+  ('conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET','conditional',8,'p_conditional','program.py',146),
+  ('conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET','conditional',12,'p_conditional_else','program.py',151),
+  ('loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET','loop',8,'p_loop','program.py',156),
+  ('show -> PRINT LEFTBRACKET expression RIGHTBRACKET','show',4,'p_show','program.py',162),
+  ('input -> NAME EQUALS READ LEFTBRACKET RIGHTBRACKET','input',5,'p_input','program.py',167),
+  ('expression -> INT','expression',1,'p_expression_number','program.py',174),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_arithmetic','program.py',179),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_arithmetic','program.py',180),
+  ('expression -> expression MULTIPLY expression','expression',3,'p_expression_arithmetic','program.py',181),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_arithmetic','program.py',182),
+  ('expression -> expression EQUALS expression','expression',3,'p_expression_arithmetic','program.py',183),
+  ('expression -> expression LOWER expression','expression',3,'p_expression_arithmetic','program.py',184),
+  ('expression -> expression GREATER expression','expression',3,'p_expression_arithmetic','program.py',185),
+  ('expression -> expression NOTEQ expression','expression',3,'p_expression_arithmetic','program.py',186),
+  ('expression -> expression LOWEREQ expression','expression',3,'p_expression_arithmetic','program.py',187),
+  ('expression -> expression GREATEREQ expression','expression',3,'p_expression_arithmetic','program.py',188),
+  ('expression -> LEFTBRACKET expression RIGHTBRACKET','expression',3,'p_expression_parenthesis','program.py',194),
+  ('expression -> MINUS expression','expression',2,'p_expression_minus','program.py',199),
+  ('expression -> NAME','expression',1,'p_expression_var','program.py',204),
 ]

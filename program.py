@@ -109,6 +109,7 @@ precedence=(
     ('left','PLUS','MINUS'),
     ('left','MULTIPLY','DIVIDE'),
 )
+start='program'
 def p_empty(p):
     '''
     empty :
@@ -119,18 +120,18 @@ def p_program_finite(p):
     '''
     program : program program
     '''
-    print(run(p[1]))
-    print(run(p[2]))
+    p[0]=('program',p[1],p[2])
 #define la derivacion de un simbolo
 def p_program_infinite(p):
     '''
     program : conditional
             | loop
+            | expression NEXTINST
             | variables NEXTINST
             | input NEXTINST
             | show NEXTINST
     '''
-    print(run(p[1]))
+    run(p[1])
 #asignador de variables
 def p_variables(p):
     '''
@@ -204,7 +205,7 @@ def p_expression_var(p):
     p[0]=('var',p[1])
 #funcion de errores
 def p_error(p):
-    print("Segmentation Fault") #o Syntax Error pero no corresponde el meme
+    print("Segmentation fault") #o Syntax Error pero no corresponde el meme
 #funcion evaluadora
 env_var={}
 def run(p):
@@ -238,7 +239,7 @@ def run(p):
         if p[0]=='if':
             cond=int(run(p[1]))!=0
             if cond:
-                run(p[7])
+                run(p[2])
         if p[0]=='ifelse':
             cond=int(run(p[1]))!=0
             if cond:
@@ -249,9 +250,12 @@ def run(p):
             while run(p[1])!=0:
                 run(p[2])
         if p[0]=='read':
-            p[1]=input()
+            p[1]=input('')
         if p[0]=='print':
-            print(p[1])
+            print(run(p[1]))
+        if p[0]=='program':
+            run(p[1])
+            run(p[2])
     else:
         return p
 #Un pequeño ejemplo
