@@ -107,8 +107,7 @@ def t_error(t):
 ##############################################
 precedence=(
     ('left','PLUS','MINUS'),
-    ('left','MULTIPLY','DIVIDE')
-    ('right','UMINUS')
+    ('left','MULTIPLY','DIVIDE'),
 )
 def p_empty(p):
     '''
@@ -118,20 +117,20 @@ def p_empty(p):
 #define la derivacion en dos simbolos
 def p_program_finite(p):
     '''
-    program : variables NEXTINST
-            | input NEXTINST
-            | show NEXTINST
-            | program program
+    program : program program
     '''
-    p[0]=(p[1],p[2])
+    print(run(p[1]))
+    print(run(p[2]))
 #define la derivacion de un simbolo
 def p_program_infinite(p):
     '''
     program : conditional
             | loop
-            | empty
+            | variables NEXTINST
+            | input NEXTINST
+            | show NEXTINST
     '''
-    p[0]=p[1]
+    print(run(p[1]))
 #asignador de variables
 def p_variables(p):
     '''
@@ -163,7 +162,7 @@ def p_show(p):
     p[0]=('print',p[3])
 def p_input(p):
     '''
-    input :  NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    input : NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
     '''
     p[0]=('read',p[1])
 #expresiones
@@ -208,7 +207,7 @@ def p_error(p):
     print("Segmentation Fault") #o Syntax Error pero no corresponde el meme
 #funcion evaluadora
 env_var={}
-def evaluate(p):
+def run(p):
     global env_var
     if type(p)==tuple:
         if p[0]=='+':
@@ -264,6 +263,13 @@ def main():
         if not tok:
             break
         print(tok)
+    parser=yacc.yacc()
+    while True:
+        try:
+            s=input('')
+        except EOFError:
+            break
+        parser.parse(s)
 
 
 if __name__=="__main__":
