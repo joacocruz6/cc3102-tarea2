@@ -16,7 +16,7 @@ Rule 10    conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACK
 Rule 11    conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
 Rule 12    loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET
 Rule 13    show -> PRINT LEFTBRACKET expression RIGHTBRACKET
-Rule 14    input -> NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+Rule 14    input -> NAME ASSIGN READ
 Rule 15    expression -> INT
 Rule 16    expression -> expression PLUS expression
 Rule 17    expression -> expression MINUS expression
@@ -34,16 +34,16 @@ Rule 28    expression -> NAME
 
 Terminals, with rules where they appear
 
-ASSIGN               : 9
+ASSIGN               : 9 14
 DIVIDE               : 19
 DO                   : 12
 ELSE                 : 11
-EQUALS               : 14 20
+EQUALS               : 20
 GREATER              : 22
 GREATEREQ            : 25
 IF                   : 10 11
 INT                  : 15
-LEFTBRACKET          : 10 11 12 13 14 26
+LEFTBRACKET          : 10 11 12 13 26
 LOWER                : 21
 LOWEREQ              : 24
 MINUS                : 17 27
@@ -54,7 +54,7 @@ NOTEQ                : 23
 PLUS                 : 16
 PRINT                : 13
 READ                 : 14
-RIGHTBRACKET         : 10 11 12 13 14 26
+RIGHTBRACKET         : 10 11 12 13 26
 THEN                 : 10 11
 WHILE                : 12
 WLEFTBRACKET         : 10 11 11 12
@@ -102,7 +102,7 @@ state 0
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
     IF              shift and go to state 8
@@ -150,7 +150,7 @@ state 1
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
     IF              shift and go to state 8
@@ -334,30 +334,27 @@ state 13
 
     (28) expression -> NAME .
     (9) variables -> NAME . ASSIGN expression
-    (14) input -> NAME . EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> NAME . ASSIGN READ
 
-  ! shift/reduce conflict for EQUALS resolved as shift
     NEXTINST        reduce using rule 28 (expression -> NAME .)
     PLUS            reduce using rule 28 (expression -> NAME .)
     MINUS           reduce using rule 28 (expression -> NAME .)
     MULTIPLY        reduce using rule 28 (expression -> NAME .)
     DIVIDE          reduce using rule 28 (expression -> NAME .)
+    EQUALS          reduce using rule 28 (expression -> NAME .)
     LOWER           reduce using rule 28 (expression -> NAME .)
     GREATER         reduce using rule 28 (expression -> NAME .)
     NOTEQ           reduce using rule 28 (expression -> NAME .)
     LOWEREQ         reduce using rule 28 (expression -> NAME .)
     GREATEREQ       reduce using rule 28 (expression -> NAME .)
     ASSIGN          shift and go to state 35
-    EQUALS          shift and go to state 36
-
-  ! EQUALS          [ reduce using rule 28 (expression -> NAME .) ]
 
 
 state 14
 
     (13) show -> PRINT . LEFTBRACKET expression RIGHTBRACKET
 
-    LEFTBRACKET     shift and go to state 37
+    LEFTBRACKET     shift and go to state 36
 
 
 state 15
@@ -389,7 +386,7 @@ state 15
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
   ! shift/reduce conflict for IF resolved as shift
@@ -463,7 +460,7 @@ state 17
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 38
+    expression                     shift and go to state 37
 
 state 18
 
@@ -488,7 +485,7 @@ state 18
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 39
+    expression                     shift and go to state 38
 
 state 19
 
@@ -513,7 +510,7 @@ state 19
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 40
+    expression                     shift and go to state 39
 
 state 20
 
@@ -538,7 +535,7 @@ state 20
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 41
+    expression                     shift and go to state 40
 
 state 21
 
@@ -563,7 +560,7 @@ state 21
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 42
+    expression                     shift and go to state 41
 
 state 22
 
@@ -588,7 +585,7 @@ state 22
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 43
+    expression                     shift and go to state 42
 
 state 23
 
@@ -613,7 +610,7 @@ state 23
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 44
+    expression                     shift and go to state 43
 
 state 24
 
@@ -638,7 +635,7 @@ state 24
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 45
+    expression                     shift and go to state 44
 
 state 25
 
@@ -663,7 +660,7 @@ state 25
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 46
+    expression                     shift and go to state 45
 
 state 26
 
@@ -688,7 +685,7 @@ state 26
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 47
+    expression                     shift and go to state 46
 
 state 27
 
@@ -759,7 +756,7 @@ state 30
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 48
+    expression                     shift and go to state 47
 
 state 31
 
@@ -775,7 +772,7 @@ state 31
     (24) expression -> expression . LOWEREQ expression
     (25) expression -> expression . GREATEREQ expression
 
-    RIGHTBRACKET    shift and go to state 49
+    RIGHTBRACKET    shift and go to state 48
     PLUS            shift and go to state 17
     MINUS           shift and go to state 18
     MULTIPLY        shift and go to state 19
@@ -829,7 +826,7 @@ state 33
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 50
+    expression                     shift and go to state 49
 
 state 34
 
@@ -873,6 +870,7 @@ state 34
 state 35
 
     (9) variables -> NAME ASSIGN . expression
+    (14) input -> NAME ASSIGN . READ
     (15) expression -> . INT
     (16) expression -> . expression PLUS expression
     (17) expression -> . expression MINUS expression
@@ -888,21 +886,15 @@ state 35
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
 
+    READ            shift and go to state 51
     INT             shift and go to state 11
     LEFTBRACKET     shift and go to state 9
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 51
+    expression                     shift and go to state 50
 
 state 36
-
-    (14) input -> NAME EQUALS . READ LEFTBRACKET RIGHTBRACKET
-
-    READ            shift and go to state 52
-
-
-state 37
 
     (13) show -> PRINT LEFTBRACKET . expression RIGHTBRACKET
     (15) expression -> . INT
@@ -925,9 +917,9 @@ state 37
     MINUS           shift and go to state 12
     NAME            shift and go to state 32
 
-    expression                     shift and go to state 53
+    expression                     shift and go to state 52
 
-state 38
+state 37
 
     (16) expression -> expression PLUS expression .
     (16) expression -> expression . PLUS expression
@@ -966,7 +958,7 @@ state 38
   ! GREATEREQ       [ shift and go to state 26 ]
 
 
-state 39
+state 38
 
     (17) expression -> expression MINUS expression .
     (16) expression -> expression . PLUS expression
@@ -1005,7 +997,7 @@ state 39
   ! GREATEREQ       [ shift and go to state 26 ]
 
 
-state 40
+state 39
 
     (18) expression -> expression MULTIPLY expression .
     (16) expression -> expression . PLUS expression
@@ -1044,7 +1036,7 @@ state 40
   ! GREATEREQ       [ shift and go to state 26 ]
 
 
-state 41
+state 40
 
     (19) expression -> expression DIVIDE expression .
     (16) expression -> expression . PLUS expression
@@ -1083,7 +1075,7 @@ state 41
   ! GREATEREQ       [ shift and go to state 26 ]
 
 
-state 42
+state 41
 
     (20) expression -> expression EQUALS expression .
     (16) expression -> expression . PLUS expression
@@ -1132,7 +1124,7 @@ state 42
   ! GREATEREQ       [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
 
 
-state 43
+state 42
 
     (21) expression -> expression LOWER expression .
     (16) expression -> expression . PLUS expression
@@ -1181,7 +1173,7 @@ state 43
   ! GREATEREQ       [ reduce using rule 21 (expression -> expression LOWER expression .) ]
 
 
-state 44
+state 43
 
     (22) expression -> expression GREATER expression .
     (16) expression -> expression . PLUS expression
@@ -1230,7 +1222,7 @@ state 44
   ! GREATEREQ       [ reduce using rule 22 (expression -> expression GREATER expression .) ]
 
 
-state 45
+state 44
 
     (23) expression -> expression NOTEQ expression .
     (16) expression -> expression . PLUS expression
@@ -1279,7 +1271,7 @@ state 45
   ! GREATEREQ       [ reduce using rule 23 (expression -> expression NOTEQ expression .) ]
 
 
-state 46
+state 45
 
     (24) expression -> expression LOWEREQ expression .
     (16) expression -> expression . PLUS expression
@@ -1328,7 +1320,7 @@ state 46
   ! GREATEREQ       [ reduce using rule 24 (expression -> expression LOWEREQ expression .) ]
 
 
-state 47
+state 46
 
     (25) expression -> expression GREATEREQ expression .
     (16) expression -> expression . PLUS expression
@@ -1377,10 +1369,55 @@ state 47
   ! GREATEREQ       [ reduce using rule 25 (expression -> expression GREATEREQ expression .) ]
 
 
-state 48
+state 47
 
     (10) conditional -> IF LEFTBRACKET expression . RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET
     (11) conditional -> IF LEFTBRACKET expression . RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
+    (16) expression -> expression . PLUS expression
+    (17) expression -> expression . MINUS expression
+    (18) expression -> expression . MULTIPLY expression
+    (19) expression -> expression . DIVIDE expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . LOWER expression
+    (22) expression -> expression . GREATER expression
+    (23) expression -> expression . NOTEQ expression
+    (24) expression -> expression . LOWEREQ expression
+    (25) expression -> expression . GREATEREQ expression
+
+    RIGHTBRACKET    shift and go to state 53
+    PLUS            shift and go to state 17
+    MINUS           shift and go to state 18
+    MULTIPLY        shift and go to state 19
+    DIVIDE          shift and go to state 20
+    EQUALS          shift and go to state 21
+    LOWER           shift and go to state 22
+    GREATER         shift and go to state 23
+    NOTEQ           shift and go to state 24
+    LOWEREQ         shift and go to state 25
+    GREATEREQ       shift and go to state 26
+
+
+state 48
+
+    (26) expression -> LEFTBRACKET expression RIGHTBRACKET .
+
+    NEXTINST        reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    PLUS            reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    MINUS           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    MULTIPLY        reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    DIVIDE          reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    EQUALS          reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    LOWER           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    GREATER         reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    NOTEQ           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    LOWEREQ         reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    GREATEREQ       reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+    RIGHTBRACKET    reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
+
+
+state 49
+
+    (12) loop -> WHILE LEFTBRACKET expression . RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET
     (16) expression -> expression . PLUS expression
     (17) expression -> expression . MINUS expression
     (18) expression -> expression . MULTIPLY expression
@@ -1405,52 +1442,7 @@ state 48
     GREATEREQ       shift and go to state 26
 
 
-state 49
-
-    (26) expression -> LEFTBRACKET expression RIGHTBRACKET .
-
-    NEXTINST        reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    PLUS            reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    MINUS           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    MULTIPLY        reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    DIVIDE          reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    EQUALS          reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    LOWER           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    GREATER         reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    NOTEQ           reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    LOWEREQ         reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    GREATEREQ       reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-    RIGHTBRACKET    reduce using rule 26 (expression -> LEFTBRACKET expression RIGHTBRACKET .)
-
-
 state 50
-
-    (12) loop -> WHILE LEFTBRACKET expression . RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET
-    (16) expression -> expression . PLUS expression
-    (17) expression -> expression . MINUS expression
-    (18) expression -> expression . MULTIPLY expression
-    (19) expression -> expression . DIVIDE expression
-    (20) expression -> expression . EQUALS expression
-    (21) expression -> expression . LOWER expression
-    (22) expression -> expression . GREATER expression
-    (23) expression -> expression . NOTEQ expression
-    (24) expression -> expression . LOWEREQ expression
-    (25) expression -> expression . GREATEREQ expression
-
-    RIGHTBRACKET    shift and go to state 55
-    PLUS            shift and go to state 17
-    MINUS           shift and go to state 18
-    MULTIPLY        shift and go to state 19
-    DIVIDE          shift and go to state 20
-    EQUALS          shift and go to state 21
-    LOWER           shift and go to state 22
-    GREATER         shift and go to state 23
-    NOTEQ           shift and go to state 24
-    LOWEREQ         shift and go to state 25
-    GREATEREQ       shift and go to state 26
-
-
-state 51
 
     (9) variables -> NAME ASSIGN expression .
     (16) expression -> expression . PLUS expression
@@ -1477,14 +1469,14 @@ state 51
     GREATEREQ       shift and go to state 26
 
 
+state 51
+
+    (14) input -> NAME ASSIGN READ .
+
+    NEXTINST        reduce using rule 14 (input -> NAME ASSIGN READ .)
+
+
 state 52
-
-    (14) input -> NAME EQUALS READ . LEFTBRACKET RIGHTBRACKET
-
-    LEFTBRACKET     shift and go to state 56
-
-
-state 53
 
     (13) show -> PRINT LEFTBRACKET expression . RIGHTBRACKET
     (16) expression -> expression . PLUS expression
@@ -1498,7 +1490,7 @@ state 53
     (24) expression -> expression . LOWEREQ expression
     (25) expression -> expression . GREATEREQ expression
 
-    RIGHTBRACKET    shift and go to state 57
+    RIGHTBRACKET    shift and go to state 55
     PLUS            shift and go to state 17
     MINUS           shift and go to state 18
     MULTIPLY        shift and go to state 19
@@ -1511,58 +1503,44 @@ state 53
     GREATEREQ       shift and go to state 26
 
 
-state 54
+state 53
 
     (10) conditional -> IF LEFTBRACKET expression RIGHTBRACKET . THEN WLEFTBRACKET program WRIGHTBRACKET
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET . THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
 
-    THEN            shift and go to state 58
+    THEN            shift and go to state 56
 
 
-state 55
+state 54
 
     (12) loop -> WHILE LEFTBRACKET expression RIGHTBRACKET . DO WLEFTBRACKET program WRIGHTBRACKET
 
-    DO              shift and go to state 59
+    DO              shift and go to state 57
 
 
-state 56
-
-    (14) input -> NAME EQUALS READ LEFTBRACKET . RIGHTBRACKET
-
-    RIGHTBRACKET    shift and go to state 60
-
-
-state 57
+state 55
 
     (13) show -> PRINT LEFTBRACKET expression RIGHTBRACKET .
 
     NEXTINST        reduce using rule 13 (show -> PRINT LEFTBRACKET expression RIGHTBRACKET .)
 
 
-state 58
+state 56
 
     (10) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN . WLEFTBRACKET program WRIGHTBRACKET
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN . WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
 
-    WLEFTBRACKET    shift and go to state 61
+    WLEFTBRACKET    shift and go to state 58
 
 
-state 59
+state 57
 
     (12) loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO . WLEFTBRACKET program WRIGHTBRACKET
 
-    WLEFTBRACKET    shift and go to state 62
+    WLEFTBRACKET    shift and go to state 59
 
 
-state 60
-
-    (14) input -> NAME EQUALS READ LEFTBRACKET RIGHTBRACKET .
-
-    NEXTINST        reduce using rule 14 (input -> NAME EQUALS READ LEFTBRACKET RIGHTBRACKET .)
-
-
-state 61
+state 58
 
     (10) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET . program WRIGHTBRACKET
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET . program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
@@ -1591,7 +1569,7 @@ state 61
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
     IF              shift and go to state 8
@@ -1603,14 +1581,14 @@ state 61
     PRINT           shift and go to state 14
 
     expression                     shift and go to state 4
-    program                        shift and go to state 63
+    program                        shift and go to state 60
     conditional                    shift and go to state 2
     loop                           shift and go to state 3
     variables                      shift and go to state 5
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 62
+state 59
 
     (12) loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET . program WRIGHTBRACKET
     (2) program -> . program program
@@ -1638,7 +1616,7 @@ state 62
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
     IF              shift and go to state 8
@@ -1650,14 +1628,14 @@ state 62
     PRINT           shift and go to state 14
 
     expression                     shift and go to state 4
-    program                        shift and go to state 64
+    program                        shift and go to state 61
     conditional                    shift and go to state 2
     loop                           shift and go to state 3
     variables                      shift and go to state 5
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 63
+state 60
 
     (10) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program . WRIGHTBRACKET
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program . WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
@@ -1687,10 +1665,10 @@ state 63
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
-    WRIGHTBRACKET   shift and go to state 65
+    WRIGHTBRACKET   shift and go to state 62
     IF              shift and go to state 8
     WHILE           shift and go to state 10
     INT             shift and go to state 11
@@ -1707,7 +1685,7 @@ state 63
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 64
+state 61
 
     (12) loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program . WRIGHTBRACKET
     (2) program -> program . program
@@ -1736,10 +1714,10 @@ state 64
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
-    WRIGHTBRACKET   shift and go to state 66
+    WRIGHTBRACKET   shift and go to state 63
     IF              shift and go to state 8
     WHILE           shift and go to state 10
     INT             shift and go to state 11
@@ -1756,7 +1734,7 @@ state 64
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 65
+state 62
 
     (10) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET .
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET . ELSE WLEFTBRACKET program WRIGHTBRACKET
@@ -1770,10 +1748,10 @@ state 65
     PRINT           reduce using rule 10 (conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET .)
     $end            reduce using rule 10 (conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET .)
     WRIGHTBRACKET   reduce using rule 10 (conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET .)
-    ELSE            shift and go to state 67
+    ELSE            shift and go to state 64
 
 
-state 66
+state 63
 
     (12) loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET .
 
@@ -1788,14 +1766,14 @@ state 66
     WRIGHTBRACKET   reduce using rule 12 (loop -> WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET .)
 
 
-state 67
+state 64
 
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE . WLEFTBRACKET program WRIGHTBRACKET
 
-    WLEFTBRACKET    shift and go to state 68
+    WLEFTBRACKET    shift and go to state 65
 
 
-state 68
+state 65
 
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET . program WRIGHTBRACKET
     (2) program -> . program program
@@ -1823,7 +1801,7 @@ state 68
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
     IF              shift and go to state 8
@@ -1835,14 +1813,14 @@ state 68
     PRINT           shift and go to state 14
 
     expression                     shift and go to state 4
-    program                        shift and go to state 69
+    program                        shift and go to state 66
     conditional                    shift and go to state 2
     loop                           shift and go to state 3
     variables                      shift and go to state 5
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 69
+state 66
 
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program . WRIGHTBRACKET
     (2) program -> program . program
@@ -1871,10 +1849,10 @@ state 69
     (27) expression -> . MINUS expression
     (28) expression -> . NAME
     (9) variables -> . NAME ASSIGN expression
-    (14) input -> . NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    (14) input -> . NAME ASSIGN READ
     (13) show -> . PRINT LEFTBRACKET expression RIGHTBRACKET
 
-    WRIGHTBRACKET   shift and go to state 70
+    WRIGHTBRACKET   shift and go to state 67
     IF              shift and go to state 8
     WHILE           shift and go to state 10
     INT             shift and go to state 11
@@ -1891,7 +1869,7 @@ state 69
     input                          shift and go to state 6
     show                           shift and go to state 7
 
-state 70
+state 67
 
     (11) conditional -> IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET .
 
@@ -1908,7 +1886,6 @@ state 70
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for EQUALS in state 13 resolved as shift
 WARNING: shift/reduce conflict for IF in state 15 resolved as shift
 WARNING: shift/reduce conflict for WHILE in state 15 resolved as shift
 WARNING: shift/reduce conflict for INT in state 15 resolved as shift
@@ -1916,6 +1893,16 @@ WARNING: shift/reduce conflict for LEFTBRACKET in state 15 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 15 resolved as shift
 WARNING: shift/reduce conflict for NAME in state 15 resolved as shift
 WARNING: shift/reduce conflict for PRINT in state 15 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 41 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 41 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 41 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 41 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 41 resolved as shift
+WARNING: shift/reduce conflict for LOWER in state 41 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 41 resolved as shift
+WARNING: shift/reduce conflict for NOTEQ in state 41 resolved as shift
+WARNING: shift/reduce conflict for LOWEREQ in state 41 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQ in state 41 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 42 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 42 resolved as shift
 WARNING: shift/reduce conflict for MULTIPLY in state 42 resolved as shift
@@ -1966,13 +1953,3 @@ WARNING: shift/reduce conflict for GREATER in state 46 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 46 resolved as shift
 WARNING: shift/reduce conflict for LOWEREQ in state 46 resolved as shift
 WARNING: shift/reduce conflict for GREATEREQ in state 46 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 47 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 47 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 47 resolved as shift
-WARNING: shift/reduce conflict for LOWER in state 47 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 47 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 47 resolved as shift
-WARNING: shift/reduce conflict for LOWEREQ in state 47 resolved as shift
-WARNING: shift/reduce conflict for GREATEREQ in state 47 resolved as shift

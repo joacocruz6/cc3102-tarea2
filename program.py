@@ -79,7 +79,7 @@ def t_THEN(t):
     t.type='THEN'
     return t
 def t_READ(t):
-    r'read'
+    r'read\(\)'
     t.type='READ'
     return t
 def t_PRINT(t):
@@ -163,7 +163,7 @@ def p_show(p):
     p[0]=('print',p[3])
 def p_input(p):
     '''
-    input : NAME EQUALS READ LEFTBRACKET RIGHTBRACKET
+    input : NAME ASSIGN READ
     '''
     p[0]=('read',p[1])
 #expresiones
@@ -247,10 +247,23 @@ def run(p):
             else:
                 run(p[3])
         if p[0]=='while':
-            while run(p[1])!=0:
-                run(p[2])
+            if type(p[1])==tuple:
+                a=p[1]
+                cond=run(a)
+                if type(cond)==bool:
+                    while cond:
+                        run(p[2])
+                        cond=run(a)
+                else:
+                    while cond!=0:
+                        run(p[2])
+                        cond=run(a)
+            else:
+                while run(p[1])!=0:
+                    run(p[2])
         if p[0]=='read':
-            p[1]=input('')
+            env_var[p[1]]=input('')
+            return env_var[p[1]]
         if p[0]=='print':
             print(run(p[1]))
         if p[0]=='program':
