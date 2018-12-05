@@ -40,7 +40,7 @@ tokens = [
 
     "IF",               # If statement condition delimiter
     "THEN",             # If statement instructions delimiter
-    "ELSE",             # If statement else instructions delimiter
+    "ELSE"             # If statement else instructions delimiter
 
 ]
 
@@ -76,6 +76,7 @@ t_WRIGHTBRACKET = r'\}'
 
 # Ignored Symbols
 t_ignore_newline = r'\n+'
+t_ignore_tab = r'\t'
 t_ignore = r' '
 
 #                               ------------ Instructions for the Language ------------
@@ -155,7 +156,7 @@ def t_error(t):
 # Precedence rules
 precedence = (
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'MULTIPLY', 'DIVIDE'),
+    ('left', 'MULTIPLY', 'DIVIDE')
 )
 
 # Program start instruction
@@ -193,7 +194,7 @@ def p_program_infinite(p):
 # Defines Assignment rule
 def p_variables(p):
     '''
-    variables : NAME ASSIGN  expression
+    variables : NAME ASSIGN expression
     '''
     p[0] = ('=', p[1], p[3])
 
@@ -289,7 +290,7 @@ def p_expression_var(p):
 
 # Defines Errors
 def p_error(p):
-    print("Segmentation fault")  # TODO: Syntax error
+    print("Syntax error found when evaluating: \n"+str(p))
 
 
 #                               ------------ Program Execution Instructions ------------
@@ -301,6 +302,8 @@ env_var = {}
 # Main Execution of instructions
 def run(p):
     global env_var
+
+    # print(p)
 
     # If many instructions are being evaluated
     if type(p) == tuple:
@@ -318,6 +321,8 @@ def run(p):
         # Comparators
         if p[0] == '==':
             return run(p[1]) == run(p[2])
+        if p[0] == '!=':
+            return run(p[1]) != run(p[2])
         if p[0] == '<':
             return run(p[1]) < run(p[2])
         if p[0] == '>':
@@ -341,18 +346,16 @@ def run(p):
 
         # If statement
         if p[0] == 'if':
-            # Condition evaluation
-            cond = int(run(p[1])) != 0
             # If True, execution happens
-            if cond:
+            if int(run(p[1])) != 0:
                 run(p[2])
 
         # If statement with complementary else
-        if p[0] == 'ifelse':
-            # Condition evaluation
-            cond = int(run(p[1])) != 0
+        if p[0] == 'ifelse':  # TODO: Fix this too!!
+            # a=1; if (a==2) then {print(1);} else {print(2);}
+
             # If True, execution happens
-            if cond:
+            if int(run(p[1])) != 0:
                 run(p[2])
             # If False, the complementary instructions execute
             else:
@@ -360,20 +363,11 @@ def run(p):
 
         # While loop
         if p[0] == 'while':  # TODO: Fix this!!
-            if type(p[1]) == tuple:
-                a = p[1]
-                cond = run(a)
-                if type(cond) == bool:
-                    while cond:
-                        run(p[2])
-                        cond = run(a)
-                else:
-                    while cond != 0:
-                        run(p[2])
-                        cond = run(a)
-            else:
-                while run(p[1]) != 0:
-                    run(p[2])
+            # while(1<2)do{print(2);}
+            # a=1; while (a != 10) do {a = a + 1; print(a);}
+
+            while int(run(p[1])) != 0:
+                run(p[2])
 
         # Read instruction
         if p[0] == 'read':
@@ -399,7 +393,7 @@ def main():
 
     # Tries out the program
     lexer = lex.lex()
-    lexer.input("print 1+2; \n a=read(); \n 1!=3; \n while true==false")
+    lexer.input("print(1+2); \n a=read(); \n 1!=3; \n while true==false")
 
     # Prints out tokens
     while True:
@@ -415,9 +409,9 @@ def main():
     while True:
         try:
             s = input('')
+            parser.parse(s)
         except EOFError:
             break
-        parser.parse(s)
 
 
 # Ensures program execution
