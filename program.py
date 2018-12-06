@@ -405,7 +405,7 @@ def run(p):  # TODO: Delete useless comments
 
         # Read instruction
         if p[0] == 'read':  # TODO: Fix this
-            env_var[p[1]] = input('')
+            env_var[p[1]] = int(input('#> '))
             return env_var[p[1]]
 
         # Print instruction
