@@ -1,46 +1,48 @@
 # -*- coding: UTF-8 -*-
-import ply.lex as lex
-import ply.yacc as yacc
+import ply.lex as ply_lex
+import ply.yacc as ply_yacc
 
+# ------------------------------------------ LEXER GENERATION ------------------------------------------
+# ------------------------------------------ ^^^^^^^^^^^^^^^^ ------------------------------------------
 
 #                               ------------ Token Declarations ------------
 
 # The original grammar is altered, deleting digits and changing numbers for the token INT,
 # which can easily be defined through regular expressions.
 tokens = [
-    "INT",              # Integers identifier
-    "NAME",             # Variables identifier
+    "INT",  # Integers identifier
+    "NAME",  # Variables identifier
 
-    "PLUS",             # Addition plus symbol
-    "MINUS",            # Subtraction, or negativity, minus symbol
-    "MULTIPLY",         # Multiplication star symbol
-    "DIVIDE",           # Division slash symbol
+    "PLUS",  # Addition plus symbol
+    "MINUS",  # Subtraction, or negativity, minus symbol
+    "MULTIPLY",  # Multiplication star symbol
+    "DIVIDE",  # Division slash symbol
 
-    "EQUALS",           # Comparison double equals symbol
-    "NOTEQ",            # Comparison different that symbol
-    "LOWEREQ",          # Comparison lower or equal than symbol
-    "GREATEREQ",        # Comparison greater or equal than symbol
-    "LOWER",            # Comparison lower than symbol
-    "GREATER",          # Comparison greater than symbol
+    "EQUALS",  # Comparison double equals symbol
+    "NOTEQ",  # Comparison different that symbol
+    "LOWEREQ",  # Comparison lower or equal than symbol
+    "GREATEREQ",  # Comparison greater or equal than symbol
+    "LOWER",  # Comparison lower than symbol
+    "GREATER",  # Comparison greater than symbol
 
-    "ASSIGN",           # Variable assignment equals symbol
-    "READ",             # Read input function delimiter
-    "PRINT",            # Print output function delimiter
+    "ASSIGN",  # Variable assignment equals symbol
+    "READ",  # Read input function delimiter
+    "PRINT",  # Print output function delimiter
 
-    "NEXTINST",         # Next instruction semicolon symbol
+    "NEXTINST",  # Next instruction semicolon symbol
 
-    "LEFTBRACKET",      # Arguments open parenthesis symbol
-    "RIGHTBRACKET",     # Arguments close parenthesis symbol
+    "LEFTBRACKET",  # Arguments open parenthesis symbol
+    "RIGHTBRACKET",  # Arguments close parenthesis symbol
 
-    "WLEFTBRACKET",     # Instructions open parenthesis symbol
-    "WRIGHTBRACKET",    # Instructions closed parenthesis symbol
+    "WLEFTBRACKET",  # Instructions open parenthesis symbol
+    "WRIGHTBRACKET",  # Instructions closed parenthesis symbol
 
-    "WHILE",            # While loop condition delimiter
-    "DO",               # While loop instructions delimiter
+    "WHILE",  # While loop condition delimiter
+    "DO",  # While loop instructions delimiter
 
-    "IF",               # If statement condition delimiter
-    "THEN",             # If statement instructions delimiter
-    "ELSE"             # If statement else instructions delimiter
+    "IF",  # If statement condition delimiter
+    "THEN",  # If statement instructions delimiter
+    "ELSE"  # If statement else instructions delimiter
 
 ]
 
@@ -79,7 +81,7 @@ t_ignore_newline = r'\n+'
 t_ignore_tab = r'\t'
 t_ignore = r' '
 
-#                               ------------ Instructions for the Language ------------
+#                               ------------ Semantics of the Tokens ------------
 
 
 # While loop conditions delimiter
@@ -140,7 +142,7 @@ def t_INT(t):
 
 # Variable definition
 def t_NAME(t):
-    r'[a-z][a-z0-9]*'
+    r'[a-zA-Z][a-zA-Z0-9]*'
     t.type = 'NAME'
     return t
 
@@ -149,6 +151,10 @@ def t_NAME(t):
 def t_error(t):
     print("Illegal Characters '%s'" % t.value[0])
     t.lexer.skip(1)
+
+
+# ------------------------------------------ PARSER GENERATION ------------------------------------------
+# ------------------------------------------ ^^^^^^^^^^^^^^^^^ ------------------------------------------
 
 #                               ------------ Parsing Rules ------------
 
@@ -170,57 +176,36 @@ def p_empty(p):
     p[0] = None
 
 
-# Defines two symbol derivation
-def p_program_finite(p):
-    '''
-    program : program program
-    '''
-    p[0] = ('program', p[1], p[2])
-
-
-# Defines one symbol derivation
-def p_program_infinite(p):
-    '''
-    program : conditional
-            | loop
-            | expression NEXTINST
-            | variables NEXTINST
-            | input NEXTINST
-            | show NEXTINST
-    '''
-    run(p[1])
-
-
-# Defines Assignment rule
-def p_variables(p):
-    '''
-    variables : NAME ASSIGN expression
-    '''
-    p[0] = ('=', p[1], p[3])
-
-
 # Defines If statement
 def p_conditional(p):
     '''
-    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET
+    conditional : IF expression THEN instruction
     '''
-    p[0] = ('if', p[3], p[7])  # TODO: This may not work
+    p[0] = ('if', p[2], p[4])
 
 
 # Defines If statement with else complement
 def p_conditional_else(p):
     '''
-    conditional : IF LEFTBRACKET expression RIGHTBRACKET THEN WLEFTBRACKET program WRIGHTBRACKET ELSE WLEFTBRACKET program WRIGHTBRACKET
+    conditional : IF expression THEN instruction ELSE instruction
     '''
-    p[0] = ('ifelse', p[3], p[7], p[11])  # TODO: This needs checking
+    p[0] = ('if else', p[2], p[4], p[6])
 
 
 # Defines While loop
 def p_loop(p):
     '''
-    loop : WHILE LEFTBRACKET expression RIGHTBRACKET DO WLEFTBRACKET program WRIGHTBRACKET
+    loop : WHILE expression DO instruction
     '''
-    p[0] = ('while', p[3], p[7])
+    p[0] = ('while', p[2], p[4])
+
+
+# Defines Assignment rule
+def p_assignment(p):
+    '''
+    assignment : NAME ASSIGN expression
+    '''
+    p[0] = ('=', p[1], p[3])
 
 
 # Defines the Print statement
@@ -239,12 +224,56 @@ def p_input(p):
     p[0] = ('read', p[1])
 
 
+# Defines one symbol derivation
+def p_program_finite(p):
+    '''
+    instruction : conditional
+                | loop
+                | assignment NEXTINST
+                | show NEXTINST
+                | input NEXTINST
+    '''
+    p[0] = ('instruction', p[1])
+
+
+def p_instruction_bracketed(p):
+    '''
+    instruction : WLEFTBRACKET instruction WRIGHTBRACKET
+                | WLEFTBRACKET code WRIGHTBRACKET
+    '''
+    p[0] = ('instruction', p[2])
+
+
 # Defines the Integer as an expression
 def p_expression_number(p):
     '''
     expression : INT
     '''
     p[0] = p[1]
+
+
+# Defines Variables as expressions
+def p_expression_var(p):
+    '''
+    expression : NAME
+    '''
+    p[0] = ('var', p[1])
+
+
+# Defines Parenthesis around expressions as expressions
+def p_expression_parenthesis(p):
+    '''
+    expression : LEFTBRACKET expression RIGHTBRACKET
+    '''
+    p[0] = p[2]
+
+
+# Defines Negative expressions as expressions
+def p_expression_minus(p):
+    '''
+    expression : MINUS expression
+    '''
+    p[0] = ('neg', p[2])
 
 
 # Defines Arithmetic operations as expressions
@@ -264,49 +293,52 @@ def p_expression_arithmetic(p):
     p[0] = (p[2], p[1], p[3])
 
 
-# Defines Parenthesis around expressions as expressions
-def p_expression_parenthesis(p):
+# Defines two symbol derivation
+def p_instruction_infinite(p):
     '''
-    expression : LEFTBRACKET expression RIGHTBRACKET
+    code : instruction instruction
+         | code instruction
+         | instruction code
     '''
-    p[0] = p[2]
+    p[0] = ('code', p[1], p[2])
 
 
-# Defines Negative expressions as expressions
-def p_expression_minus(p):
+def p_final(p):
     '''
-    expression : MINUS expression
+    program : code
+            | instruction
     '''
-    p[0] = -p[2]
-
-
-# Defines Variables as expressions
-def p_expression_var(p):
-    '''
-    expression : NAME
-    '''
-    p[0] = ('var', p[1])
+    run(p[1])
 
 
 # Defines Errors
 def p_error(p):
     print("Syntax error found when evaluating: \n"+str(p))
 
+# ------------------------------------------ PARSE TREE EXECUTION ------------------------------------------
+# ------------------------------------------ ^^^^^^^^^^^^^^^^^^^^ ------------------------------------------
 
 #                               ------------ Program Execution Instructions ------------
+
 
 # Defines the Environment Variables Dictionary
 env_var = {}
 
 
 # Main Execution of instructions
-def run(p):
+def run(p):  # TODO: Delete useless comments
     global env_var
-
-    # print(p)
 
     # If many instructions are being evaluated
     if type(p) == tuple:
+
+        # Program management
+        if p[0] == 'code':
+            run(p[1])
+            run(p[2])
+
+        if p[0] == 'instruction':
+            run(p[1])
 
         # Arithmetic operators
         if p[0] == '+':
@@ -317,6 +349,8 @@ def run(p):
             return run(p[1]) * run(p[2])
         if p[0] == '/':
             return run(p[1]) / run(p[2])
+        if p[0] == 'neg':
+            return -run(p[1])
 
         # Comparators
         if p[0] == '==':
@@ -351,7 +385,7 @@ def run(p):
                 run(p[2])
 
         # If statement with complementary else
-        if p[0] == 'ifelse':  # TODO: Fix this too!!
+        if p[0] == 'if else':
             # a=1; if (a==2) then {print(1);} else {print(2);}
 
             # If True, execution happens
@@ -362,15 +396,15 @@ def run(p):
                 run(p[3])
 
         # While loop
-        if p[0] == 'while':  # TODO: Fix this!!
-            # while(1<2)do{print(2);}
+        if p[0] == 'while':
+            # while (1 < 2) do {print(2);}
             # a=1; while (a != 10) do {a = a + 1; print(a);}
 
             while int(run(p[1])) != 0:
                 run(p[2])
 
         # Read instruction
-        if p[0] == 'read':
+        if p[0] == 'read':  # TODO: Fix this
             env_var[p[1]] = input('')
             return env_var[p[1]]
 
@@ -378,40 +412,28 @@ def run(p):
         if p[0] == 'print':
             print(run(p[1]))
 
-        # Multiple instruction bundle
-        if p[0] == 'program':
-            run(p[1])
-            run(p[2])
-
     # If a single instruction is being evaluated
     else:
         return p
 
 
+# ------------------------------------------ MAIN ------------------------------------------
+# ------------------------------------------ ^^^^ ------------------------------------------
+
+def init():
+    lexer = ply_lex.lex()
+    parser = ply_yacc.yacc()
+    return lexer, parser
+
+
 # A small example
 def main():
-
-    # Tries out the program
-    lexer = lex.lex()
-    lexer.input("print(1+2); \n a=read(); \n 1!=3; \n while true==false")
-
-    # Prints out tokens
     while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        print(tok)
-
-    # Generates the program parser
-    parser = yacc.yacc()
-
-    # Execution of the program from terminal input
-    while True:
-        try:
-            s = input('')
-            parser.parse(s)
-        except EOFError:
-            break
+        filename = input("Enter filename to execute (or press enter to end):\n>> ")
+        with open(filename, "r") as file:
+            text = file.read()
+            lexer, parser = init()
+            parser.parse(text, lexer=lexer)
 
 
 # Ensures program execution
