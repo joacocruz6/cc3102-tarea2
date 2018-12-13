@@ -10,6 +10,7 @@ print(a*b);
 print(a/b);
 print((a+b)*b);
 print(a+b*b);
-fa=1;
-while (fa != 10) do { print(fa != 10); fa = fa + 1;}
+fa=0;
+while (fa != 10) do {print(fa != 10); print(fa); fa = fa + 1;}
+print(fa != 10);
 print(fa);

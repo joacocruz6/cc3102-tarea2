@@ -8,7 +8,7 @@ __pycache__/
 .idea/misc.xml
 
 parser.out
-parsertab.py
+parsetab.py
 
 # C extensions
 *.so

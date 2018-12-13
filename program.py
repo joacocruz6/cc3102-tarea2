@@ -168,22 +168,17 @@ def t_error(t):
 
 # Precedence rules for arithmetic operations
 precedence = (
-    ('nonasoc', 'ASSIGN'),
-    ('nonasoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),
+    ('nonassoc', 'ASSIGN'),
+    ('nonassoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVIDE'),
+    ('nonassoc', 'LEFTBRACKET', 'RIGHTBRACKET'),
+    ('nonassoc', 'IF', 'THEN'),
+    ('nonassoc', 'ELSE'),
 )
 
 # Defines the start symbol, will be the root of the parse tree
 start = 'program'
-
-
-# Defines the if statement
-def p_conditional(p):
-    '''
-    conditional : IF expression THEN instruction
-    '''
-    p[0] = ('if', p[2], p[4])
 
 
 # Defines the if statement with the else complement
@@ -194,20 +189,20 @@ def p_conditional_else(p):
     p[0] = ('if else', p[2], p[4], p[6])
 
 
+# Defines the if statement
+def p_conditional(p):
+    '''
+    conditional : IF expression THEN instruction
+    '''
+    p[0] = ('if', p[2], p[4])
+
+
 # Defines the while loop statement
 def p_loop(p):
     '''
     loop : WHILE expression DO instruction
     '''
     p[0] = ('while', p[2], p[4])
-
-
-# Defines the assignment statement
-def p_assignment(p):
-    '''
-    assignment : NAME ASSIGN expression
-    '''
-    p[0] = ('=', p[1], p[3])
 
 
 # Defines the print statement
@@ -224,6 +219,14 @@ def p_input(p):
     input : NAME ASSIGN READ
     '''
     p[0] = ('read', p[1])
+
+
+# Defines the assignment statement
+def p_assignment(p):
+    '''
+    assignment : NAME ASSIGN expression
+    '''
+    p[0] = ('=', p[1], p[3])
 
 
 # Defines what qualifies as an instruction
@@ -301,8 +304,6 @@ def p_instruction_infinite(p):
     '''
     code : instruction instruction
          | code instruction
-         | instruction code
-         | code code
     '''
     p[0] = ('code', p[1], p[2])
 
