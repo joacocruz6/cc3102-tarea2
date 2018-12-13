@@ -168,20 +168,14 @@ def t_error(t):
 
 # Precedence rules for arithmetic operations
 precedence = (
+    ('nonasoc', 'ASSIGN'),
+    ('nonasoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'MULTIPLY', 'DIVIDE')
+    ('left', 'MULTIPLY', 'DIVIDE'),
 )
 
 # Defines the start symbol, will be the root of the parse tree
 start = 'program'
-
-
-# Defines the empty symbol
-def p_empty(p):
-    '''
-    empty :
-    '''
-    p[0] = None
 
 
 # Defines the if statement
@@ -361,7 +355,7 @@ def run(p):
         if p[0] == '/':
             return run(p[1]) / run(p[2])
         if p[0] == 'neg':
-            return -run(p[1])
+            return - run(p[1])
 
         # Comparators
         if p[0] == '==':
