@@ -166,15 +166,16 @@ def t_error(t):
 #                               ------------ Parsing Rules ------------
 
 
-# Precedence rules for arithmetic operations
+# Precedence ruless
 precedence = (
-    ('nonassoc', 'ASSIGN'),
-    ('nonassoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'MULTIPLY', 'DIVIDE'),
-    ('nonassoc', 'LEFTBRACKET', 'RIGHTBRACKET'),
-    ('nonassoc', 'IF', 'THEN'),
-    ('nonassoc', 'ELSE'),
+    ('nonassoc', 'IF', 'THEN', 'WHILE', 'DO'),          #  Conditionals and loops should receive pre-parsed expressions and instructions
+    ('nonassoc', 'ELSE'),               #  The else keyword should be recognized before a 'if then'
+    ('nonassoc', 'WLEFTBRACKET', 'WRIGHTBRACKET'),      #  Brackets should group up pre-parsed instructions
+    ('nonassoc', 'ASSIGN'),             #  Variable asignment should receive already parsed expressions  
+    ('nonassoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),    #  Variable comparison should receive precalculatet arithmetics
+    ('left', 'PLUS', 'MINUS'),                  #  Addition and subtraction should
+    ('left', 'MULTIPLY', 'DIVIDE'),             #  receive pre-parsed products
+    ('nonassoc', 'LEFTBRACKET', 'RIGHTBRACKET'),        #  Brackets take priority over products
 )
 
 # Defines the start symbol, will be the root of the parse tree
