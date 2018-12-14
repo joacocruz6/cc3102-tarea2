@@ -381,7 +381,7 @@ def run(p):
         if p[0] == 'var':
             # It may not exist
             if p[1] not in env_var:
-                return "Variable has not been assigned yet"
+                raise ExecutionException("Tried to access an innexistent variable declared as '"+str(p[1])+"'")
             else:
                 return env_var[p[1]]
 
@@ -430,16 +430,34 @@ def init():
     return lexer, parser
 
 
+# Reset the variables dictionary, ensuring values aren't shared among programs
+def clear_variables():
+    env_var.clear()
+    pass
+
+
+# An exception for the program to reset easily
+class ExecutionException(Exception):
+    pass
+
+
 # Main program loop
 def main():
     while True:
         filename = input("Enter filename to execute (or press enter to end):\n>> ")
         if filename == "":
             exit(0)
-        with open(filename, "r") as file:
-            text = file.read()
-            lexer, parser = init()
-            parser.parse(text, lexer=lexer)
+        # Execution can raise an exception in case the code attempts to access an undeclared value
+        try:
+            with open(filename, "r") as file:
+                text = file.read()
+                lexer, parser = init()    
+                parser.parse(text, lexer=lexer)
+        except ExecutionException as e:
+            print(e)
+        # Values must be cleaned on every execution
+        finally:
+            clear_variables()
 
 
 # Ensures program execution from terminal
