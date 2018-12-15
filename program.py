@@ -166,13 +166,13 @@ def t_error(t):
 #                               ------------ Parsing Rules ------------
 
 
-# Precedence ruless
+# Precedence rules
 precedence = (
     ('nonassoc', 'IF', 'THEN', 'WHILE', 'DO'),          #  Conditionals and loops should receive pre-parsed expressions and instructions
     ('nonassoc', 'ELSE'),               #  The else keyword should be recognized before a 'if then'
     ('nonassoc', 'WLEFTBRACKET', 'WRIGHTBRACKET'),      #  Brackets should group up pre-parsed instructions
-    ('nonassoc', 'ASSIGN'),             #  Variable asignment should receive already parsed expressions  
-    ('nonassoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),    #  Variable comparison should receive precalculatet arithmetics
+    ('nonassoc', 'ASSIGN'),             #  Variable assignment should receive already parsed expressions  
+    ('nonassoc', 'EQUALS', 'LOWER', 'GREATER', 'NOTEQ', 'LOWEREQ', 'GREATEREQ'),    #  Variable comparison should receive pre-parsed arithmetics
     ('left', 'PLUS', 'MINUS'),                  #  Addition and subtraction should
     ('left', 'MULTIPLY', 'DIVIDE'),             #  receive pre-parsed products
     ('nonassoc', 'LEFTBRACKET', 'RIGHTBRACKET'),        #  Brackets take priority over products
@@ -361,17 +361,17 @@ def run(p):
 
         # Comparators
         if p[0] == '==':
-            return run(p[1]) == run(p[2])
+            return 1 if run(p[1]) == run(p[2]) else 0  
         if p[0] == '!=':
-            return run(p[1]) != run(p[2])
+            return 1 if run(p[1]) != run(p[2]) else 0 
         if p[0] == '<':
-            return run(p[1]) < run(p[2])
+            return 1 if run(p[1]) < run(p[2]) else 0 
         if p[0] == '>':
-            return run(p[1]) > run(p[2])
+            return 1 if run(p[1]) > run(p[2]) else 0 
         if p[0] == '<=':
-            return run(p[1]) <= run(p[2])
+            return 1 if run(p[1]) <= run(p[2]) else 0 
         if p[0] == '>=':
-            return run(p[1]) >= run(p[2])
+            return 1 if run(p[1]) >= run(p[2]) else 0 
 
         # Variable assignment
         if p[0] == '=':
@@ -381,7 +381,7 @@ def run(p):
         if p[0] == 'var':
             # It may not exist
             if p[1] not in env_var:
-                raise ExecutionException("Tried to access an innexistent variable declared as '"+str(p[1])+"'")
+                raise ExecutionException("[Custom Error 1] Tried to access non-existent variable '"+str(p[1])+"'")
             else:
                 return env_var[p[1]]
 
@@ -447,16 +447,19 @@ def main():
         filename = input("Enter filename to execute (or press enter to end):\n>> ")
         if filename == "":
             exit(0)
-        # Execution can raise an exception in case the code attempts to access an undeclared value
         try:
             with open(filename, "r") as file:
                 text = file.read()
                 lexer, parser = init()    
                 parser.parse(text, lexer=lexer)
         except ExecutionException as e:
+        # Execution can raise an exception in case the code attempts to access an non-existent value
             print(e)
-        # Values must be cleaned on every execution
+        except FileNotFoundError as e:
+        # The executable may not exist too
+            print(e)
         finally:
+        # Values must be cleaned on every execution
             clear_variables()
 
 
