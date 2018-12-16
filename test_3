@@ -1,0 +1,8 @@
+n = read();
+r = 1;
+while(n > 0)
+  do{
+  r = r * n;
+  n = n - 1;
+  }
+  print(r);
